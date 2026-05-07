@@ -1,11 +1,25 @@
-"type": "service_account",
-  "project_id": "agent-ia-data-connection",
-  "private_key_id": "756df3fa69bb893b17e212e9c58e2b7b1ad95df9",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDLqO+Ie14DRcBp\n5yn0uFd8Y0hIeJgFN33tqDz62ZUhD62hTlpWvfRgMeqAnd1Is9ke/yzkddWh3WMP\nSsUgryEn5x1nW80IjKh2vy25tpJxljcR21hO5GlUMCKPLF+vZVGLHiCIEqjMH237\niYUuKTH8McV9aZUyXQPAY5qqyW159v3LURmb7k9AOwpEgH2mod0Xi2Nm2lAlFdOa\nCh/wvUIARl5tepQ1dxe5wuuoBFnWWyMU4yr4ATWbvT5cE5zACcNu23whi766mCSb\nJHD/C5/T4mxg8sCk+DS4lFXzNiCf4GUvT9pzBr9mKgMUDB53H7H0L4dJoqHrguk5\nqa3sbuObAgMBAAECggEACl5u2PC0V/pPJ5UrX62bAVbqBoviltwSae0s3aCs+mKa\noSHPcPx5hVmalN3KDGThDbZJiirYVkYNQGlldpqJV5y+tH/KBUC+uvz/ePsV+E6A\n6JnVpH6glja1K7uYoOIfBV7ionWWE9PDJ7wCryz4bIdO2hRsEi+w0d9rBShS4z4G\nwYdFICdYATrO1S6NEtNxe6mjaqQmMGGRyAvvSPgBSkzT4VbyCfIHwGm19Gp98q2h\njoMc2qdafhJhKE0cadAa2mui9s/AN8IjL3zINzAJXz30vzk9M93NWER5FAK3tgk1\nGRwYJ4JIV1SLI+k8Q0m+5qpmPiwSo+NKdCp+JHmlEQKBgQDmKFVCGAx12vPNykbC\nyd7/x7yCNTQK5n1OQakY9aiDmW+ePyR+1pV06YV/RVkEcgz1UtngZz5TBa5IG6zr\nMRu7eyyVeNp49aF7MiHCfoRnmJo1YyCTLJpzBJBlbKXlfaVllPEE8Wt+8dwq3P1B\nF0jIJg6UnIzG8F43pBb9yWwlxQKBgQDihvPC5S62uU37rDGuEmBuLsg/84l2DQ0T\nnqDPXSL+kfLENXwif6mZn7CVFxaQlWOxwxw2vNXtROutXQYe8iuDE/jBiqoVeKxf\nUwTaSa1iiS6kJ6luMOKmlsWwwc83cb9jEC1Txabs2wufM0udwZWU6u2Tcbp+C+zq\nTILO577Z3wKBgQDNAzZWpmdK/9rV/40ia4FJI5jF/zA5WXBaqeA/TGtrtdwYALS4\nitochvqUEKinbhQe3ksXOb/pYhEJSCWyZk8GpERlbH5m6p2JyHEL93hncyZB0eet\nUTjOpU0eGzZ3AoG2x4IdXhLbxALS54BrX5tENaodNImtl2TFeVPFgorj5QKBgQDF\nUQP32iYMp/DTrjRACmXQ1BM+EWbFW6zuUBiHR/t5f6vVWTld25Hh7QWleE0Bd/81\nElz7GRXG7WfUxNjWD9/y92yRObXZqhmLlwb9FXxf/lqQRrQA9bgXn/FnfAqBoyUw\npyC0fdBfNJY1ADt3mO4wn0p+SmxF6yFdHXQ7wgWuRQKBgAx26G7HD38/eFo9s+kQ\n5K0MiwueXOy40eKT7xbJglc8913VVMM5aHV0471XLUAfTTZYXcYw+SguOBpjXDS2\nMcW8PJDJ2xdDgT5+0aJbJbOh52kag7hsgrXUfyH9CSiyBxtGMmQ8yKfInfc9gpWH\nJ5qsIjCTtcVdCjvSwUs2jPGz\n-----END PRIVATE KEY-----\n",
-  "client_email": "test-ai-agent@agent-ia-data-connection.iam.gserviceaccount.com",
-  "client_id": "106291404174572480993",
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-  "token_uri": "https://oauth2.googleapis.com/token",
-  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/test-ai-agent%40agent-ia-data-connection.iam.gserviceaccount.com",
-  "universe_domain": "googleapis.com"
+name: Sync Drive to GitHub
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"   # cada 6 horas
+  workflow_dispatch:          # también manual desde la UI
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: sderosiaux/google-drive-to-github-sync@main
+        with:
+          google_credentials: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          config: |
+            sync:
+              - drive_folder_id: "1CGQ78n2nm6F1kSd9CGbzkf-nXokL5ou8"
+                github_folder: "docs/mi-carpeta"
+
+
